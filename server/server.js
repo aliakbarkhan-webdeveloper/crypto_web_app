@@ -4,7 +4,7 @@ const { PORT } = require("./config/config.js");
 const dbConnect = require("./mongoDB/dbConnect.js");
 const userRoute = require("./routes/user.route.js");
 const errorHandler = require("./middleware/errorHandler.middle.js");
-
+//By Ali
 app.use(express.json());
 app.use(userRoute);
 dbConnect();
@@ -15,8 +15,3 @@ app.use(errorHandler);
 app.listen(PORT, () => {
   console.log(`port is working at: ${PORT}`);
 });
-
-
-
-
-
