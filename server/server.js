@@ -4,7 +4,6 @@ const { PORT } = require("./config/config.js");
 const dbConnect = require("./mongoDB/dbConnect.js");
 const userRoute = require("./routes/user.route.js");
 const errorHandler = require("./middleware/errorHandler.middle.js");
-r
 
 app.use(express.json());
 app.use(userRoute);
