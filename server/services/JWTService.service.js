@@ -1,5 +1,4 @@
 const jwt = require("jsonwebtoken");
-const cookieParser = require("cookie-parser");
 //importing Model to Store Refresh token
 const refreshTokenModel = require("../models/token.model.js");
 const {

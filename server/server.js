@@ -4,7 +4,10 @@ const { PORT } = require("./config/config.js");
 const dbConnect = require("./mongoDB/dbConnect.js");
 const userRoute = require("./routes/user.route.js");
 const errorHandler = require("./middleware/errorHandler.middle.js");
+//importing cookie-parsr and use as a middleware so we can send token inside cookies
+const cookieParser = require("cookie-parser");
 
+app.use(cookieParser());
 app.use(express.json());
 app.use(userRoute);
 dbConnect();
