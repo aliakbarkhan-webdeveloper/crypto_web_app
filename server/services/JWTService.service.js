@@ -1,2 +1,8 @@
-//install cookie-parser
-//what is buffer of node
+const jwt = require("jsonwebtoken");
+const cookieParser = require("cookie-parser");
+
+
+class JWTService{
+    //sign/create tokken
+    //sign/create refresh tokken
+}
