@@ -6,5 +6,5 @@ class JWTService {
   //sign/create refresh tokken
   //verify access token
   //verify refresh token
-  //store token
+  //store refresh token
 }
