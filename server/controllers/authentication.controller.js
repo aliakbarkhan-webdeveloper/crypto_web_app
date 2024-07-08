@@ -2,8 +2,11 @@ const Joi = require("joi");
 const User = require("../models/user.model.js");
 const bcrypt = require("bcryptjs");
 const userDTO = require("../DTO/user.dto.js");
-
+const jwtService = require("../services/JWTService.service.js");
 const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,25}$/;
+
+//Controller for Registeration of user
+
 const registerController = async (req, res, next) => {
   //Steps in user Registration
   // 1: validate user input  =>note user validation can be done manually or with library
@@ -50,19 +53,46 @@ const registerController = async (req, res, next) => {
   const hashedPassword = await bcrypt.hash(password, 10);
 
   // 5:store data in DB
-  const userRegister = new User({
-    username,
-    name,
-    email,
-    password: hashedPassword, // passwill be saved as hashed password
-  });
-  const user = await userRegister.save();
+  let accessToken;
+  let refreshToken;
+  let user;
+  try {
+    const userRegister = new User({
+      username,
+      name,
+      email,
+      password: hashedPassword, // passwill be saved as hashed password
+    });
+    user = await userRegister.save();
 
+    //Generating tokens
+    accessToken = jwtService.signAccessToken(
+      { _id: user.id, username: user.email },
+      "30m"
+    ); //storing payload and time of expiry which will pass into constructor
+    refreshToken = jwtService.signRefreshToken({ _id: user, id }, "60m");
+  } catch (error) {
+    return next(error);
+  }
+
+  //saving refresh token in DB
+  jwtService.refreshSave(refreshToken, user._id);
+
+  //sending tokens in cookies
+  res.cookie("accessToken", accessToken, {
+    maxAge: 1000 * 60 * 60 * 24,
+    httpOnly: true,
+  }); //maxAge means expiry time of cookie
+  res.cookie("refreshToken", refreshToken, {
+    maxAge: 1000 * 60 * 60 * 24 * 3,
+    httpOnly: true,
+  });
   // 6:send Response
   const DTO = new userDTO(user);
   return res.status(201).json({ user: DTO });
 };
 
+//Controller for login the user
 const loginController = async (req, res, next) => {
   //steps
 
