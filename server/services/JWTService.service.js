@@ -1,17 +1,28 @@
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
+//importing Model to Store Refresh token
+const {
+  SECRET_KEY_ACCESS_TOKEN,
+  SECRET_KEY_REFRESH_TOKEN,
+} = require("../config/config.js");
 //node pkg crypto install for generating secret key or use any online tool
-const SECRET_KEY_ACCESS_TOKEN="1683ad8fbbffa32j9293u8n311340aleu2392kjaln4jwk82hksd8akaldjff0asdjajw3lajskndna77ad7s7da9aasfa6asa94232"
+
 class JWTService {
   //sign/create tokken
-  signAccessToken(payload, expiresTime, secretKey=SECRET_KEY_ACCESS_TOKEN) {
-    jwt.sign(payload, secretKey, { expiresIn: expiresTime });
+  signAccessToken(payload, expiresTime) {
+    jwt.sign(payload, SECRET_KEY_ACCESS_TOKEN, { expiresIn: expiresTime });
   }
   //sign/create refresh tokken
-  signRefreshToken(payload, expiresTime, secretKey) {
-    jwt.sign(payload, secretKey, { expiresIn: expiresTime });
+  signRefreshToken(payload, expiresTime) {
+    jwt.sign(payload, SECRET_KEY_REFRESH_TOKEN, { expiresIn: expiresTime });
   }
   //verify access token
+  verifyAccessToken(token) {
+    return jwt.verify(token, SECRET_KEY_ACCESS_TOKEN);
+  }
   //verify refresh token
+  verifyRefreshToken(token) {
+    return jwt.verify(token, SECRET_KEY_REFRESH_TOKEN);
+  }
   //store refresh token
 }
