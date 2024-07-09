@@ -15,6 +15,6 @@ dbConnect();
 //error middleware should be used at the end
 app.use(errorHandler);
 
-app.listen(PORT, () => {
-  console.log(`port is working at: ${PORT}`);
+app.listen(4000, () => {
+  console.log(`port is working at:${PORT}`);
 });

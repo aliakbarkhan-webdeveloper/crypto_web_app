@@ -56,6 +56,7 @@ const registerController = async (req, res, next) => {
   let accessToken;
   let refreshToken;
   let user;
+  const JWTService=new jwtService();
   try {
     const userRegister =  new User({
       username,
@@ -66,17 +67,19 @@ const registerController = async (req, res, next) => {
     user = await userRegister.save();
 
     //Generating tokens
-    accessToken = jwtService.signAccessToken(
-      { _id: user.id, username: user.email },
+    
+    accessToken = JWTService.signAccessToken(
+      { _id: user.username, username: user.email },
       "30m"
     ); //storing payload and time of expiry which will pass into constructor
-    refreshToken = jwtService.signRefreshToken({ _id: user.id }, "60m");
+    refreshToken = JWTService.signRefreshToken({ _id: user.id }, "60m");
+   
   } catch (error) {
     return next(error);
   }
 
   //saving refresh token in DB
-  jwtService.refreshSave(refreshToken, user._id);
+  JWTService.refreshSave(refreshToken, user._id);
 
   //sending tokens in cookies
   res.cookie("accessToken", accessToken, {
