@@ -9,9 +9,9 @@ const refreshTokenSchema = new Schema(
   { timestamps: true }
 );
 
-const tokenSchema = mongoose.model(
+const refreshTokenModel = mongoose.model(
   "RefreshToken",
   refreshTokenSchema,
   "tokens"//create collection of tokens
 );
-module.exports = refreshTokenSchema;
+module.exports = refreshTokenModel;

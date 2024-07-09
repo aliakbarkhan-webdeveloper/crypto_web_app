@@ -57,7 +57,7 @@ const registerController = async (req, res, next) => {
   let refreshToken;
   let user;
   try {
-    const userRegister = new User({
+    const userRegister =  new User({
       username,
       name,
       email,
@@ -70,7 +70,7 @@ const registerController = async (req, res, next) => {
       { _id: user.id, username: user.email },
       "30m"
     ); //storing payload and time of expiry which will pass into constructor
-    refreshToken = jwtService.signRefreshToken({ _id: user, id }, "60m");
+    refreshToken = jwtService.signRefreshToken({ _id: user.id }, "60m");
   } catch (error) {
     return next(error);
   }
