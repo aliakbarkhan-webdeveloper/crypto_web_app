@@ -9,23 +9,23 @@ const SECRET_KEY_REFRESH_TOKENS="486d71e848aefb0afed16a5c425d710d8dfbfedea7bc5ea
 class JWTService {
   //sign/create tokken
   //note make methods as static so we should not make new object each time for using methods
-  static signAccessToken(payload, expiresTime) {
-    jwt.sign(payload, SECRET_KEY_ACCESS_TOKENS, { expiresIn: expiresTime });
+  signAccessToken(payload, expiresTime) {
+   return jwt.sign(payload, SECRET_KEY_ACCESS_TOKENS, { expiresIn: expiresTime });
   }
   //sign/create refresh tokken
-  static signRefreshToken(payload, expiresTime) {
-    jwt.sign(payload, SECRET_KEY_REFRESH_TOKENS, { expiresIn: expiresTime });
+  signRefreshToken(payload, expiresTime) {
+    return jwt.sign(payload, SECRET_KEY_REFRESH_TOKENS, { expiresIn: expiresTime });
   }
   //verify access token
- static verifyAccessToken(token) {
+ verifyAccessToken(token) {
     return jwt.verify(token, SECRET_KEY_ACCESS_TOKENS);
   }
   //verify refresh token
-static verifyRefreshToken(token) {
+verifyRefreshToken(token) {
     return jwt.verify(token, SECRET_KEY_REFRESH_TOKENS);
   }
   //store refresh token
- static async refreshSave(token, userid) {
+ async refreshSave(token, userid) {
     try {
       const newToken = new refreshTokenModel({
         token: token,

@@ -68,11 +68,11 @@ const registerController = async (req, res, next) => {
 
     //Generating tokens
     
-    accessToken = JWTService.signAccessToken(
+    accessToken = await JWTService.signAccessToken(
       { _id: user.username, username: user.email },
       "30m"
     ); //storing payload and time of expiry which will pass into constructor
-    refreshToken = JWTService.signRefreshToken({ _id: user.id }, "60m");
+    refreshToken =await JWTService.signRefreshToken({ _id: user.id }, "60m");
    
   } catch (error) {
     return next(error);
