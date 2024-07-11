@@ -186,10 +186,18 @@ const logoutController = async (req, res, next) => {
   res.clearCookie("refreshToken");
   res.clearCookie("accessToken");
   //send response to user
-  res.status(200).json({ user: null, auth: null });
+  res.status(200).json({ user: null, auth: false });
 };
 
-module.exports = { loginController, registerController, logoutController };
+const refreshController = async (req, res, next) => {
+  
+};
+module.exports = {
+  loginController,
+  registerController,
+  logoutController,
+  refreshController,
+};
 
 //const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,25}$/;
 /*
