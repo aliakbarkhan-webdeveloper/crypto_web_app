@@ -21,10 +21,7 @@ router.post("/logout",logoutController)
 
 
 module.exports=router;
-//login
-//register
-//logout
-//refresh
+
 
 
 
