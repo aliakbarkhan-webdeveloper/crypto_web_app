@@ -190,7 +190,59 @@ const logoutController = async (req, res, next) => {
 };
 
 const refreshController = async (req, res, next) => {
-  
+  //accessing the refreshToken
+  const prevRefreshToken = req.cookies.refreshToken;
+  //verify refresh token
+  let id;
+  const JWTService = new jwtService();
+  try {
+    id = JWTService.verifyRefreshToken(prevRefreshToken)._id;
+  } catch (e) {
+    const error = {
+      status: 401,
+      message: "unauthorized",
+    };
+    return next(error);
+  }
+
+  try {
+    const verified = await refreshModel.findOne(id);
+    if (!verified) {
+      const error = {
+        status: 401,
+        message: "unauthorized",
+      };
+      return next(error);
+    }
+  } catch (error) {}
+  //generate new refresh token
+  try {
+    const accessToken = JWTService.signAccessToken({ _id: id }, "30m");
+    const refreshToken = JWTService.signRefreshToken({ _id: id }, "60m");
+    //update DB with new refresh token and update the DB
+    await refreshModel.updateOne({ _id: id }, { token: refreshToken });
+    res.cookie("accessToken", accessToken, {
+      maxAge: 1000 * 60 * 60 * 24,
+      httpOnly: true,
+    });
+    res.cookie("refreshToken", refreshToken, {
+      maxAge: 1000 * 60 * 60 * 24 * 3,
+      httpOnly: true,
+    });
+  } catch (error) {
+    return next(error);
+  }
+  let cook=req.cookies;
+  if(!cook){
+    let error={
+      status:401,
+      message:"unauthorized"
+    }
+    return next(error)
+  }
+  const user = await User.findOne({ _id: id });
+  const DTO = new userDTO(user);
+  res.status(200).json({ user: DTO, auth: true });
 };
 module.exports = {
   loginController,

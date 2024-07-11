@@ -26,7 +26,7 @@ class JWTService {
   }
   //verify refresh token
   verifyRefreshToken(token) {
-    return jwt.verify(token, SECRET_KEY_REFRESH_TOKENS);
+    return jwt.verify(token, SECRET_KEY_REFRESH_TOKENS);//return in boolean
   }
   //store refresh token
   async refreshSave(token, userid) {
