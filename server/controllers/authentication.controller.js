@@ -3,14 +3,15 @@ const User = require("../models/user.model.js");
 const bcrypt = require("bcryptjs");
 const userDTO = require("../DTO/user.dto.js");
 const jwtService = require("../services/JWTService.service.js");
+const refreshModel = require("../models/token.model.js");
 const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,25}$/;
 
 //Controller for Registeration of user
-
 const registerController = async (req, res, next) => {
   //Steps in user Registration
   // 1: validate user input  =>note user validation can be done manually or with library
   //we will use joe package to valide inputs
+
   const userRegisterSchema = Joi.object({
     username: Joi.string().min(4).max(25).required(),
     name: Joi.string().max(25).required(),
@@ -56,9 +57,9 @@ const registerController = async (req, res, next) => {
   let accessToken;
   let refreshToken;
   let user;
-  const JWTService=new jwtService();
+  const JWTService = new jwtService();
   try {
-    const userRegister =  new User({
+    const userRegister = new User({
       username,
       name,
       email,
@@ -67,19 +68,15 @@ const registerController = async (req, res, next) => {
     user = await userRegister.save();
 
     //Generating tokens
-    
-    accessToken = await JWTService.signAccessToken(
-      { _id: user.username, username: user.email },
-      "30m"
-    ); //storing payload and time of expiry which will pass into constructor
-    refreshToken =await JWTService.signRefreshToken({ _id: user.id }, "60m");
-   
+
+    accessToken = JWTService.signAccessToken({ _id: user._id }, "30m"); //storing payload and time of expiry which will pass into constructor
+    refreshToken = JWTService.signRefreshToken({ _id: user._id }, "60m");
   } catch (error) {
     return next(error);
   }
 
   //saving refresh token in DB
-  JWTService.refreshSave(refreshToken, user._id);
+  await JWTService.refreshSave(refreshToken, user._id);
 
   //sending tokens in cookies
   res.cookie("accessToken", accessToken, {
@@ -92,13 +89,17 @@ const registerController = async (req, res, next) => {
   });
   // 6:send Response
   const DTO = new userDTO(user);
-  return res.status(201).json({ user: DTO });
+  return res.status(201).json({ user: DTO, auth: true });
 };
+//
+//
+//
+//
 
 //Controller for login the user
+
 const loginController = async (req, res, next) => {
   //steps
-
   //1: validate user input by creating schema with the help of joi package
   const loginValidationSchema = Joi.object({
     username: Joi.string().min(4).max(25).required(),
@@ -138,14 +139,43 @@ const loginController = async (req, res, next) => {
   }
 
   //4: return response
+  //generating refresh and access token and send it while login inside cookies
+  const JWTService = new jwtService();
+  const accessToken = JWTService.signAccessToken({ _id: user._id }, "30m");
 
+  const refreshToken = JWTService.signRefreshToken({ _id: user._id }, "60m");
+  //update refresh token in DB
+  try {
+    await refreshModel.updateOne(
+      { _id: user._id },
+      { token: refreshToken },
+      { upsert: true } //upsert mean if it will found similar data to token and same id then it will update it,if it will not found similar then it will create new
+    );
+  } catch (error) {
+    return next(error);
+  }
+
+  res.cookie("accessToken", accessToken, {
+    maxAge: 1000 * 60 * 60 * 24,
+    httpOnly: true,
+  });
+  res.cookie("refreshToken", refreshToken, {
+    maxAge: 1000 * 60 * 60 * 24 * 3,
+    httpOnly: true,
+  });
   //we we use DTO to send a specific data after filtering the other data
   //we do this bcz we do do not want to send password or other seceret data in response
-
   const DTO = new userDTO(user);
-  return res.status(200).json({ user: DTO });
+  return res.status(200).json({ user: DTO, auth: true });
 };
-module.exports = { loginController, registerController };
+
+//
+//
+//
+//Controller for Logout
+const logoutController = async (req, res, next) => {};
+
+module.exports = { loginController, registerController,logoutController };
 
 //const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,25}$/;
 /*
