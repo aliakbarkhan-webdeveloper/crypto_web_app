@@ -10,11 +10,11 @@ const {
 //creating blog
 router.post("/writeblog", auth, blogCreation);
 //getting all blogs
-router.get("/blogs", getBlogs);
+router.get("/blogs",auth, getBlogs);
 //get a specific blog
-router.get("/blog/:id", findBlog);
+router.get("/blog/:id",auth, findBlog);
 //update Blog
-router.put("/blog", updateBlog);
+router.put("/blog",auth, updateBlog);
 //delete Blog
-router.delete("/blog", deleteBlog);
+router.delete("/blog",auth, deleteBlog);
 module.exports = router;
