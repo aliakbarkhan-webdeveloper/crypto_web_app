@@ -4,6 +4,7 @@ const bcrypt = require("bcryptjs");
 const userDTO = require("../DTO/user.dto.js");
 const jwtService = require("../services/JWTService.service.js");
 const refreshModel = require("../models/token.model.js");
+const refreshTokenModel = require("../models/token.model.js");
 const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,25}$/;
 
 //Controller for Registeration of user
@@ -173,9 +174,22 @@ const loginController = async (req, res, next) => {
 //
 //
 //Controller for Logout
-const logoutController = async (req, res, next) => {};
+const logoutController = async (req, res, next) => {
+  //Delete refresh token from DB
+  const { refreshToken } = req.cookies;
+  try {
+    await refreshTokenModel.deleteOne({ token: refreshToken });
+  } catch (error) {
+    return next(error);
+  }
+  //Deleting all cookies
+  res.clearCookie("refreshToken");
+  res.clearCookie("accessToken");
+  //send response to user
+  res.status(200).json({ user: null, auth: null });
+};
 
-module.exports = { loginController, registerController,logoutController };
+module.exports = { loginController, registerController, logoutController };
 
 //const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,25}$/;
 /*
