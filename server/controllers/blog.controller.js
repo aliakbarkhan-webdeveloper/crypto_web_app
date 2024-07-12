@@ -1,5 +1,6 @@
 const joi = require("joi");
-const { validate } = require("../models/token.model");
+const fs = require("fs"); //built-in module in node to save data on disc locally
+const blogModel = require("../models/blog.model.js");
 const mongodbPatern = /^[0-9a-fA-F]{24}$/;
 const blogCreation = async (req, res, next) => {
   //validate req,body
@@ -15,8 +16,24 @@ const blogCreation = async (req, res, next) => {
   }
 
   //handle photo and storage  , Note: 1st we store photo locally then store the name of photo in DB
-  //photoHandeling=>   clientSide->base64 String -> decode -> store -> save PhotoPath in DB
-  //add to DB
+  //photoHandeling=>   clientSide->encoded base64 String -> decode -> store -> save PhotoPath in DB
+  const { title, author, content, photo } = req.body;
+  //reading photo as buffer
+  const buffer = Buffer.from(
+    photo.replace(/^data:image\/(png|jpg|jpeg);base64,/, ""), //explanation is at the end of the file
+    "base64"
+  );
+  //allot a random name to buffer
+  const imagePath = `${Date.now()}-${author}.png`;
+  //save locally with fs
+  try {
+    fs.writeFileSync(`storage/${imagePath}`, buffer); //first argument will be the location of image and second is the our photo in buffer form
+  } catch (error) {
+    return next(error);
+  }
+
+  //save Blog in mongoDb
+  
   //return response
 };
 const getBlogs = async (req, res, next) => {};
