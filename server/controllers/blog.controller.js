@@ -1,6 +1,7 @@
 const joi = require("joi");
 const fs = require("fs"); //built-in module in node to save data on disc locally
-const {SERVER_PATH}=require("../config/config.js")
+const blogDTO = require("../DTO/blog.dto.js");
+const { SERVER_PATH } = require("../config/config.js");
 const blogModel = require("../models/blog.model.js");
 const mongodbPatern = /^[0-9a-fA-F]{24}$/;
 const blogCreation = async (req, res, next) => {
@@ -34,14 +35,21 @@ const blogCreation = async (req, res, next) => {
   }
 
   //save Blog in mongoDb
+  let newBlog;
   try {
-    const newBlog=new blogModel({
-        title,author,content,imagePath:`${SERVER_PATH}/storage/${imagePath}`
-    })
+    newBlog = new blogModel({
+      title,
+      author,
+      content,
+      imagePath: `${SERVER_PATH}/storage/${imagePath}`,
+    });
+    await newBlog.save();
   } catch (error) {
-    return next(error)
+    return next(error);
   }
   //return response
+  const DTO = new blogDTO(newBlog);
+  return res.status(201).json({ blog: DTO });
 };
 const getBlogs = async (req, res, next) => {};
 const findBlog = async (req, res, next) => {};
