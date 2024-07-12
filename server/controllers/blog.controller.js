@@ -53,8 +53,9 @@ const blogCreation = async (req, res, next) => {
   }
   //return response
   const DTO = new blogDTO(newBlog);
-  return res.status(201).json({ blog: DTO });
   console.log("line 57");
+  return res.status(201).json({ blog: DTO });
+ 
 };
 const getBlogs = async (req, res, next) => {
   try {
