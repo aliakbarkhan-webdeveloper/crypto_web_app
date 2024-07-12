@@ -15,6 +15,7 @@ const blogCreation = async (req, res, next) => {
   const { error } = blogSchema.validate(req.body);
   if (error) {
     return next(error);
+    console.log("line 18");
   }
 
   //handle photo and storage  , Note: 1st we store photo locally then store the name of photo in DB
@@ -27,9 +28,11 @@ const blogCreation = async (req, res, next) => {
   );
   //allot a random name to buffer
   const imagePath = `${Date.now()}-${author}.png`;
+  console.log("line 31");
   //save locally with fs
   try {
     fs.writeFileSync(`storage/${imagePath}`, buffer); //first argument will be the location of image and second is the our photo in buffer form
+    console.log("line 34");
   } catch (error) {
     return next(error);
   }
@@ -44,14 +47,29 @@ const blogCreation = async (req, res, next) => {
       imagePath: `${SERVER_PATH}/storage/${imagePath}`,
     });
     await newBlog.save();
+    console.log("line 50");
   } catch (error) {
     return next(error);
   }
   //return response
   const DTO = new blogDTO(newBlog);
   return res.status(201).json({ blog: DTO });
+  console.log("line 57");
 };
-const getBlogs = async (req, res, next) => {};
+const getBlogs = async (req, res, next) => {
+  try {
+    const blogs = await blogModel.find({});
+
+    const blogsDto = [];
+    for (let i = 0; i < blogs.length; i++) {
+      const dto=new blogDTO(blogs[i])
+      blogsDto.push(dto);
+    }
+    return res.status(201).json({blogs:blogsDto})
+  } catch (error) {
+    return next(error);
+  }
+};
 const findBlog = async (req, res, next) => {};
 const updateBlog = async (req, res, next) => {};
 const deleteBlog = async (req, res, next) => {};
