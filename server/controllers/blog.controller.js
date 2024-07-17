@@ -84,17 +84,17 @@ const findBlog = async (req, res, next) => {
   if (error) {
     return next(errorHandler);
   }
-const {id}=req.params;
   //step 2: send response
+  const { id } = req.params;
   let blog;
   try {
-    blog = await blogModel.find({ _id: id });
+    blog = await blogModel.findOne({ _id: id }).populate("author");
   } catch (error) {
     return next(error);
   }
 
-const DTO=new blogDTO(blog);
-
+  const DTO = new blogDTO(blog);
+  return res.status(200).json({ blog: DTO });
 };
 const updateBlog = async (req, res, next) => {};
 const deleteBlog = async (req, res, next) => {};

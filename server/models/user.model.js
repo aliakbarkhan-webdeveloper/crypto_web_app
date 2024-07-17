@@ -16,6 +16,6 @@ const userSchema = new Schema(
 //mongoose.model("model name","Schema name", "collection name")
 //ref means some model or field belongs to other model, 
 //like comment belong to blog and blog to user
-const userModel=mongoose.model("user",userSchema,"users");
+const userModel=mongoose.model("User",userSchema,"users");
 
 module.exports=userModel;
