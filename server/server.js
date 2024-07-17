@@ -12,6 +12,7 @@ app.use(express.json());
 app.use(userRoute);
 dbConnect();
 
+app.use("storage",express.static("storage"));
 
 //error middleware should be used at the end
 app.use(errorHandler);

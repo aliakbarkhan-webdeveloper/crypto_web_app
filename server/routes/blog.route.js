@@ -10,7 +10,7 @@ const {
 //creating blog
 router.post("/writeblog", auth, blogCreation);
 //getting all blogs
-router.get("/blogs",auth, getBlogs);
+router.get("/blog/all",auth, getBlogs);
 //get a specific blog
 router.get("/blog/:id",auth, findBlog);
 //update Blog

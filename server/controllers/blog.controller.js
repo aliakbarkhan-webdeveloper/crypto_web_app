@@ -3,6 +3,8 @@ const fs = require("fs"); //built-in module in node to save data on disc locally
 const blogDTO = require("../DTO/blog.dto.js");
 const { SERVER_PATH } = require("../config/config.js");
 const blogModel = require("../models/blog.model.js");
+const errorHandler = require("../middleware/errorHandler.middle.js");
+
 const mongodbPatern = /^[0-9a-fA-F]{24}$/;
 const blogCreation = async (req, res, next) => {
   //validate req,body
@@ -15,7 +17,6 @@ const blogCreation = async (req, res, next) => {
   const { error } = blogSchema.validate(req.body);
   if (error) {
     return next(error);
-    console.log("line 18");
   }
 
   //handle photo and storage  , Note: 1st we store photo locally then store the name of photo in DB
@@ -53,25 +54,48 @@ const blogCreation = async (req, res, next) => {
   }
   //return response
   const DTO = new blogDTO(newBlog);
-  console.log("line 57");
   return res.status(201).json({ blog: DTO });
- 
 };
+
 const getBlogs = async (req, res, next) => {
   try {
     const blogs = await blogModel.find({});
 
     const blogsDto = [];
     for (let i = 0; i < blogs.length; i++) {
-      const dto=new blogDTO(blogs[i])
+      const dto = new blogDTO(blogs[i]);
       blogsDto.push(dto);
     }
-    return res.status(201).json({blogs:blogsDto})
+    return res.status(201).json({ blogs: blogsDto });
   } catch (error) {
     return next(error);
   }
 };
-const findBlog = async (req, res, next) => {};
+
+//find a Specific blog
+const findBlog = async (req, res, next) => {
+  //Step 1: Validate Id
+
+  const specificBlogSchema = joi.object({
+    id: joi.string().regex(mongodbPatern).required(),
+  });
+
+  const { error } = specificBlogSchema.validate(req.params);
+  if (error) {
+    return next(errorHandler);
+  }
+const {id}=req.params;
+  //step 2: send response
+  let blog;
+  try {
+    blog = await blogModel.find({ _id: id });
+  } catch (error) {
+    return next(error);
+  }
+
+const DTO=new blogDTO(blog);
+
+};
 const updateBlog = async (req, res, next) => {};
 const deleteBlog = async (req, res, next) => {};
 
