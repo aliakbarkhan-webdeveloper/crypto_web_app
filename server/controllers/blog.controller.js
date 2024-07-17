@@ -117,10 +117,41 @@ const updateBlog = async (req, res, next) => {
   //if we are going to update photo then 1st we have to delete previous photo
   let blog;
   try {
-    blog=await blogModel.findOne({_id:blogId})
+    blog = await blogModel.findOne({ _id: blogId });
   } catch (error) {
-    return next(error)
+    return next(error);
   }
+  if (photo) {
+    let prevPhoto = blog.photoPath;
+    prevPhoto = prevPhoto.split("/").at(-1);
+
+    //deleting photo
+    fs.unlinkSync(`storage/${prevPhoto}`);
+
+    //reading photo as buffer
+    const buffer = Buffer.from(
+      photo.replace(/^data:image\/(png|jpg|jpeg);base64,/, ""), //explanation is at the end of the file
+      "base64"
+    );
+    //allot a random name to buffer
+    const imagePath = `${Date.now()}-${author}.png`;
+    console.log("line 31");
+    //save locally with fs
+    try {
+      fs.writeFileSync(`storage/${imagePath}`, buffer); //first argument will be the location of image and second is the our photo in buffer form
+      console.log("line 34");
+    } catch (error) {
+      return next(error);
+    }
+
+    await blogModel.updateOne(
+      { _id: blogId },
+      { title, content, photoPath: `${SERVER_PATH}/storage/${imagePath}` }
+    );
+  } else {
+    await blogModel.updateOne({ title, content });
+  }
+  return res.status(200).json({ message: "blog Updated" });
 };
 const deleteBlog = async (req, res, next) => {};
 
