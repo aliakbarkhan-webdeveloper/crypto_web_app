@@ -153,6 +153,8 @@ const updateBlog = async (req, res, next) => {
   }
   return res.status(200).json({ message: "blog Updated" });
 };
+
+//blog delete controller
 const deleteBlog = async (req, res, next) => {};
 
 module.exports = { blogCreation, getBlogs, findBlog, updateBlog, deleteBlog };
