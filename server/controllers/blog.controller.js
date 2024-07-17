@@ -114,7 +114,13 @@ const updateBlog = async (req, res, next) => {
   }
   //update
   const { title, content, author, blogId, photo } = req.body;
-  
+  //if we are going to update photo then 1st we have to delete previous photo
+  let blog;
+  try {
+    blog=await blogModel.findOne({_id:blogId})
+  } catch (error) {
+    return next(error)
+  }
 };
 const deleteBlog = async (req, res, next) => {};
 
