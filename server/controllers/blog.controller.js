@@ -3,6 +3,7 @@ const fs = require("fs"); //built-in module in node to save data on disc locally
 const blogDTO = require("../DTO/blog.dto.js");
 const { SERVER_PATH } = require("../config/config.js");
 const blogModel = require("../models/blog.model.js");
+const blogUserDto = require("../DTO/blogsDetail.dto.js");
 const errorHandler = require("../middleware/errorHandler.middle.js");
 
 const mongodbPatern = /^[0-9a-fA-F]{24}$/;
@@ -93,7 +94,7 @@ const findBlog = async (req, res, next) => {
     return next(error);
   }
 
-  const DTO = new blogDTO(blog);
+  const DTO = new blogUserDto(blog);
   return res.status(200).json({ blog: DTO });
 };
 const updateBlog = async (req, res, next) => {};

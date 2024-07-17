@@ -1,7 +1,7 @@
 class BlogUserDTO {
     constructor(data) {
       this._id=blog._id
-      this.author = data.author;
+     this.createdAt=data.createdAt;
       this.content = data.content;
       this.photo = data.photoPath;
       this.title = data.title;
