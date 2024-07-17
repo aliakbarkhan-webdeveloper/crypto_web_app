@@ -97,7 +97,25 @@ const findBlog = async (req, res, next) => {
   const DTO = new blogUserDto(blog);
   return res.status(200).json({ blog: DTO });
 };
-const updateBlog = async (req, res, next) => {};
+
+//blog Update Controller
+const updateBlog = async (req, res, next) => {
+  //validate user
+  const updateSchema = joi.object({
+    title: joi.string().required(),
+    content: joi.string().required(),
+    author: joi.string().regex(mongodbPatern).required(),
+    blogId: joi.string().regex(mongodbPatern).required(),
+    photo: joi.string(),
+  });
+  const { error } = updateSchema.validate(req.body);
+  if (error) {
+    return next(error);
+  }
+  //update
+  const { title, content, author, blogId, photo } = req.body;
+  
+};
 const deleteBlog = async (req, res, next) => {};
 
 module.exports = { blogCreation, getBlogs, findBlog, updateBlog, deleteBlog };
