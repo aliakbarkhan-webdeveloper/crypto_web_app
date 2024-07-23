@@ -3,6 +3,7 @@ const fs = require("fs"); //built-in module in node to save data on disc locally
 const blogDTO = require("../DTO/blog.dto.js");
 const { SERVER_PATH } = require("../config/config.js");
 const blogModel = require("../models/blog.model.js");
+const commentModel = require("../models/comments.model.js");
 const blogUserDto = require("../DTO/blogsDetail.dto.js");
 const errorHandler = require("../middleware/errorHandler.middle.js");
 
@@ -155,7 +156,27 @@ const updateBlog = async (req, res, next) => {
 };
 
 //blog delete controller
-const deleteBlog = async (req, res, next) => {};
+const deleteBlog = async (req, res, next) => {
+  //validate id
+  const deleteBlogSchema = joi.object({
+    id: joi.string.regex(mongodbPatern).required(),
+  });
+
+  const { error } = deleteBlogSchema.validate(req.params);
+  if (error) {
+    return next(error);
+  }
+  //delete blog
+  const { id } = req.params;
+  try {
+    await blogModel.deleteOne({ _id: id });
+     //delete comments on blog
+    await commentModel.deleteMany({ blog: id });
+  } catch (error) {
+    return next(error);
+  }
+ res.status(200).json{message:"blog deleted"}
+};
 
 module.exports = { blogCreation, getBlogs, findBlog, updateBlog, deleteBlog };
 
