@@ -170,12 +170,12 @@ const deleteBlog = async (req, res, next) => {
   const { id } = req.params;
   try {
     await blogModel.deleteOne({ _id: id });
-     //delete comments on blog
+    //delete comments on blog
     await commentModel.deleteMany({ blog: id });
   } catch (error) {
     return next(error);
   }
- res.status(200).json{message:"blog deleted"}
+  res.status(200).json({ message: "blog deleted" });
 };
 
 module.exports = { blogCreation, getBlogs, findBlog, updateBlog, deleteBlog };
