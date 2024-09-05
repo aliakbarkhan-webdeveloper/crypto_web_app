@@ -29,6 +29,10 @@ const blogCreation = async (req, res, next) => {
     photo.replace(/^data:image\/(png|jpg|jpeg);base64,/, ""), //explanation is at the end of the file
     "base64"
   );
+  //The Input:
+  //"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII"
+  
+  
   //allot a random name to buffer
   const imagePath = `${Date.now()}-${author}.png`;
   console.log("line 31");
