@@ -2,16 +2,13 @@
 
 
 
-async function App() {
-  let data;
-  try {
-    data= await fetch("http://localhost:4000/refresh");
-  } catch (error) {
-    return error
-  }
-  <>
-  <h1>${data}</h1>
-    </>
+function App() {
+  <div>
+  <h1>Ali Akbar Khan</h1>
+<p>is this working</p>
+
+
+  </div>
   }
 
-export default App
+export default App;
