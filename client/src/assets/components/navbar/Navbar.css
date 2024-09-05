@@ -1,22 +1,73 @@
-.navbar{
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    padding: 20px 0;
-    margin: 20px auto;
-    width: 80%;
+.navbar {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 20px 0;
+  margin: 20px auto;
+  width: 80%;
 }
-.logo{
-    font-size: 32px;
-    font-weight: 800;
+.logo {
+  font-size: 32px;
+  font-weight: 800;
+  text-decoration: none;
 }
-.activeStyle{
-color: #3861fb;
-font-size: 22px;
-font-weight: bold;
+.activeStyle {
+  color: #3861fb;
+  font-size: 22px;
+  font-weight: bold;
 }
-.inActiveStyle{
-text-decoration: none;
-font-size: 22px;
-font-weight: bold;
+.inActiveStyle {
+  text-decoration: none;
+  font-size: 22px;
+  font-weight: bold;
 }
+
+.logInButton {
+  border: none;
+  outline: none;
+  border-radius: 10px;
+  padding: 10px 15px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: large;
+  text-decoration: none;
+}
+.logInButton:hover{
+    color: black;
+    background-color: #f3f3f3;
+}
+.logOutButton {
+  background-color: #3861fb;
+  margin-left: 10px;
+  color: white;
+  border: none;
+  outline: none;
+  border-radius: 10px;
+  padding: 10px 15px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: large;
+}
+.logOutButton:hover{
+    background-color: #1f4ffd;
+}
+.signOut {
+    background-color: #3861fb;
+    margin-left: 10px;
+    color: white;
+    border: none;
+    outline: none;
+    border-radius: 10px;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: large;
+  }
+  .signOut:hover{
+      background-color: #1f4ffd;
+  }
+  .seperator{
+    height: 1px;
+    margin-top: 5px;
+    background: linear-gradient(to right, transparent,#9ba3c2,transparent);
+  }

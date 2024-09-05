@@ -2,6 +2,7 @@ import { NavLink } from "react-router-dom";
 import "./Navbar.css";
 
 function Navbar() {
+  let isAuthenticated = false;
   return (
     <>
       <nav className='navbar'>
@@ -22,7 +23,7 @@ function Navbar() {
             isActive ? "activeStyle" : "inActiveStyle"
           }
         >
-          Crypto Currencies
+          Coins
         </NavLink>
         <NavLink
           to='/blog'
@@ -38,25 +39,37 @@ function Navbar() {
             isActive ? "activeStyle" : "inActiveStyle"
           }
         >
-          Submit a blog
+          Publish blog
         </NavLink>
-        <NavLink
-          to='sign-in'
-          className={({ isActive }) =>
-            isActive ? "activeStyle" : "inActiveStyle"
-          }
-        >
-          sign in
-        </NavLink>
-        <NavLink
-          to='sign-up'
-          className={({ isActive }) =>
-            isActive ? "activeStyle" : "inActiveStyle"
-          }
-        >
-          sign up
-        </NavLink>
+
+        {isAuthenticated ? (
+          <div>
+            <NavLink to='/'>
+              <button className='signOut'>sign out</button>
+            </NavLink>
+          </div>
+        ) : (
+          <div>
+            <NavLink
+              to='sign-in'
+              className={({ isActive }) =>
+                isActive ? "activeStyle" : "inActiveStyle"
+              }
+            >
+              <button className='logInButton'>sign in</button>
+            </NavLink>
+            <NavLink
+              to='sign-up'
+              className={({ isActive }) =>
+                isActive ? "activeStyle" : "inActiveStyle"
+              }
+            >
+              <button className='logOutButton'>sign up</button>
+            </NavLink>
+          </div>
+        )}
       </nav>
+      <div className="seperator"></div>
     </>
   );
 }
