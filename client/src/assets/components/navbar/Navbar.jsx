@@ -69,7 +69,7 @@ function Navbar() {
           </div>
         )}
       </nav>
-      <div className="seperator"></div>
+      <div className='seperator'></div>
     </>
   );
 }
