@@ -1,14 +1,9 @@
-import { useEffect } from "react";
 
 
 
 
 function App() {
-  useEffect(
-    ()=>{
-  document.title="ali akbar"
-    }
-  )
+ 
   return(
   <div>
   <h1>Ali Akbar Khan</h1>
