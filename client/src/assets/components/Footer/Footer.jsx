@@ -1,8 +1,8 @@
-
+import "./Footer.css"
 
 function Footer() {
   return (
-    <div>Footer</div>
+    <p className="footer">&copy; Crypto news</p>
   )
 }
 
