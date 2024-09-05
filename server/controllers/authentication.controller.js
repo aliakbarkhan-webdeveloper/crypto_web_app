@@ -5,8 +5,8 @@ const userDTO = require("../DTO/user.dto.js");
 const jwtService = require("../services/JWTService.service.js");
 const refreshModel = require("../models/token.model.js");
 const refreshTokenModel = require("../models/token.model.js");
-const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,25}$/;
-
+// const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,25}$/;
+const passwordPattern        =/^(?=.[A-Z])(?=.\d)(?=.[@$!%?&])[A-Za-z\d@$!%*?&]{8,25}$/;
 //Controller for Registeration of user
 const registerController = async (req, res, next) => {
   //Steps in user Registration
@@ -17,7 +17,7 @@ const registerController = async (req, res, next) => {
     username: Joi.string().min(4).max(25).required(),
     name: Joi.string().max(25).required(),
     email: Joi.string().email().required(),
-    password: Joi.string().pattern(passwordPattern).required(),
+    password: Joi.string().min(4).max(25).required(),
     confirmPassword: Joi.ref("password"), //it refer the above passwrod field to match
   });
 
@@ -104,7 +104,7 @@ const loginController = async (req, res, next) => {
   //1: validate user input by creating schema with the help of joi package
   const loginValidationSchema = Joi.object({
     username: Joi.string().min(4).max(25).required(),
-    password: Joi.string().pattern(passwordPattern).required(),
+    password: Joi.string().min(4).max(25).required(),
   });
   const { error } = loginValidationSchema.validate(req.body);
 
