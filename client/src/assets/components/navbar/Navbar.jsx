@@ -18,7 +18,7 @@ function Navbar() {
           Home
         </NavLink>
         <NavLink
-          to='/crypto'
+          to='/coins'
           className={({ isActive }) =>
             isActive ? "activeStyle" : "inActiveStyle"
           }
@@ -26,7 +26,7 @@ function Navbar() {
           Coins
         </NavLink>
         <NavLink
-          to='/blog'
+          to='/blogs'
           className={({ isActive }) =>
             isActive ? "activeStyle" : "inActiveStyle"
           }
@@ -34,7 +34,7 @@ function Navbar() {
           blogs
         </NavLink>
         <NavLink
-          to='/submit'
+          to='/writeblog'
           className={({ isActive }) =>
             isActive ? "activeStyle" : "inActiveStyle"
           }
